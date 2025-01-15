@@ -1,0 +1,50 @@
+.appNew {
+    height: 100vh;
+    display: flex;
+    color: white;
+    background-color: #020230;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #020230),
+    url("https://i.ytimg.com/vi/yQbJRGs0fy8/maxresdefault.jpg") center;
+    object-fit: contain;
+  }
+
+.pyramid {
+  background-color: #020230;
+}
+
+.moneyList {
+  padding: 10px;
+  list-style: none;
+  width: 100%;
+}
+
+.moneyListItem {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.moneyListItem.active {
+  background-color: teal;
+}
+
+.moneyListItemNumber {
+  width: 25%;
+  font-size: 10px;
+  font-weight: 100;
+}
+
+.moneyListItemAmount {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.timer {
+  width: 60px;
+  height: 60px;
+  bottom: 15px;
+  left: 25px;
+  font-size: 26px;
+  font-weight: 600;
+}
