@@ -1,4 +1,4 @@
-  <template>
+    <template>
     <div class="bg-gradient-to-r from-orange-400 to-orange-300 text-white min-h-screen flex flex-col items-center p-5">
       <header class="w-full flex items-center justify-between p-4 bg-rose-800">
         <button @click="goBack" class="transition-transform transform hover:scale-110">
@@ -18,11 +18,6 @@
         </p>
   
         <div class="quiz-actions mt-1 flex items-center justify-center space-x-3" title="Start Quiz">
-          <!-- <router-link 
-            :to="'/game/quiz/start2'" 
-            class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition">
-            Start Quiz
-          </router-link> -->
           <router-link 
             :to="'/game/quiz/start'" 
             class="bg-gradient-to-r from-green-400 to-lime-500 text-white px-4 py-2 rounded-full flex items-center space-x-1 hover:bg-orange-500 transition-transform transform hover:scale-110">
@@ -56,8 +51,6 @@
       </div>
       </section>
     </div>
-    <!-- <NewQuestionData :data1="questions" /> -->
-    <!-- <ThirdComponent v-if="questions && questions.length" :questions="questions" /> -->
     <LoaderData v-if="isLoading" />
     <ToasterData v-if="toastMessage" :message="toastMessage" :type="toastType" />
   </template>
@@ -65,16 +58,11 @@
   <script>
   import LoaderData from '../LoaderData.vue';
   import ToasterData from '../ToasterData.vue';
-  // import ThirdComponent from '../Games/Quiz/ThirdComponents.vue';
-  // import NewQuestionData from '../Games/QuizGames.vue';
-  
   export default {
     name: "QuizGames",
     components: {
       LoaderData,
       ToasterData,
-      // ThirdComponent
-      // NewQuestionData
     },
     data() {
       return {
@@ -83,33 +71,13 @@
         error: null,
       };
     },
-    async mounted() {
+    mounted() {
       this.isLoading = true;
       setTimeout(() => {
         this.isLoading = false;
       }, 500);
     },
-    created() {
-      // this.fetchQuestions();  
-  },
     methods: {
-      async fetchQuestions(){
-        try {
-      // const response = await fetch("/questions.txt"); // Path relative to the public folder
-      // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      // const textData = await response.text();
-
-      const response = await fetch("https://res.cloudinary.com/dzoaewmgu/raw/upload/v1736250594/wzv2jocum9iqewt9oxep.txt")
-      
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const textData = await response.text();
-      this.questions = JSON.parse(textData);
-      console.log(this.questions)
-    } catch (error) {
-      console.error("Failed to load questions:", error);
-      this.error = "Failed to load questions. Please try again later.";
-    }
-      },
       goBack() {
         this.isLoading = true;
         setTimeout(() => {
