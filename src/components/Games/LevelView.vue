@@ -467,10 +467,11 @@ export default {
           'L', 'E', 'G', 'H',
         ], answer: ['BIG', 'CUTE', 'LEG'] },
        27: { type: 'memory', question: 'Match the pairs.', pairs: ['BAT', 'CAT', 'ICE', 'BAT', 'CAT', 'ICE'], answer: ['BAT', 'CAT', 'ICE'] },
-       28: { type: 'general knowledge', question: 'Who developed the theory of relativity?', answer: 'Albert Einstein' },
+       28: { type: 'general knowledge', question: 'Who developed the theory of relativity?', answer: 'Einstein' },
        29: { type: 'vocabulary', question: 'Select the synonym of "Happy"', options: ['Sad', 'Joyful'], answer: 'Joyful' }, 
        30: { type: 'logic', question: 'The more you take, the more you leave behind. What am I?', answer: 'Footsteps' },
-        31: { type: 'drag-drop', question: 'Rearrange the letters to form the word.', pieces: ['F', 'O', 'L', 'G'], answer: 'GOLF'},  
+       31: { type: 'vocabulary', question: 'You are in a dark room with a single match. What do you light first?', options: ['Candle', 'The Match'], answer: 'The Match' },
+        // 31: { type: 'drag-drop', question: 'Rearrange the letters to form the word.', pieces: ['F', 'O', 'L', 'G'], answer: 'GOLF'},  
         32: {type: 'word-search', question: 'Find these words: [APPLE, ORANGE, BANANA]',grid: [
         'B', 'E', 'A', 'R',
         'L', 'I', 'M', 'E',
@@ -536,11 +537,11 @@ export default {
     },
     checkAnswer(selectedOption) {
       console.log(selectedOption)
-      const trimmedUserAnswer = this.userAnswer?.trim() || '';
-      const isSpecialType  = this.currentPuzzle.type === 'vocabulary' || this.currentPuzzle.type === 'word unscramble';
+      const trimmedUserAnswer = this.userAnswer?.trim() || selectedOption.trim();
+      const isSpecialType  = this.currentPuzzle.type === 'word unscramble';
 
       const correctAnswer = this.currentPuzzle.answer;
-      if (trimmedUserAnswer === "" && isSpecialType) {
+      if (trimmedUserAnswer === "" && isSpecialType && this.currentPuzzle.type !== 'vocabulary') {
         this.showToast('Answer cannot be empty. Please try again.', 'warning');
         return;
       }
@@ -611,6 +612,7 @@ export default {
               this.shuffledPairs = [];
               this.flippedCards = [];
               this.matchedPairs = [];
+              this.wrongAttempts = 0;
               this.currentPuzzle = this.puzzles[this.level]; 
               this.$router.push({ name: 'LevelView', params: { levelNo: this.level } });
             }
@@ -618,7 +620,7 @@ export default {
             this.showToast('No match, try again.', 'danger');
             this.wrongAttempts++;
             if (this.wrongAttempts >= 7) {
-              this.showToast('Too many wrong attempts. Restarting from Level 0.', 'warning');
+              this.showToast('Too many wrong attempts. Restarting from Level 0.', 'danger');
               const puzzleGameOverAudio = new Audio(puzzleAudioFail);
             puzzleGameOverAudio.play();
             this.isLoading = true;
