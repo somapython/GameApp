@@ -47,20 +47,6 @@
 import LoaderData from './LoaderData.vue';
 import ToasterData from './ToasterData.vue';
 import axios from 'axios';
-// import axios from 'axios';
-// import { initializeApp } from 'firebase/app';
-// import { getDatabase, ref, set } from 'firebase/database';
-// const firebaseConfig1 = {
-//   apiKey: "AIzaSyBKEgB9EU7RTSAmRmlTqIVIEpos03VrmPU",
-//   authDomain: "vuelogin-853da.firebaseapp.com",
-//   projectId: "vuelogin-853da",
-//   storageBucket: "vuelogin-853da.firebasestorage.app",
-//   messagingSenderId: "822061705304",
-//   appId: "1:822061705304:web:118b882fd0f8fa54df022d"
-// };
-// const firebaseApp = initializeApp(firebaseConfig1);
-// const db = getDatabase(firebaseApp);
-
 export default {
   components: {
     LoaderData,
