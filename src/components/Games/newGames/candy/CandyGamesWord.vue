@@ -21,6 +21,9 @@
                 @dragenter.prevent
                 @drop="dragDrop(rIndex, cIndex)"
                 @dragend="dragEnd"
+                @touchstart="onTouchStart(rIndex, cIndex, $event)"
+                @touchmove="onTouchMove($event)"
+                @touchend="onTouchEnd(rIndex, cIndex, $event)"
                 class="w-10 h-10 border-2 border-transparent hover:border-yellow-500 rounded-lg shadow-md transition-all animate__animated animate__zoomIn"
                 />
             </div>
@@ -139,6 +142,7 @@ export default {
       score: 0,
       currTile: null,
       otherTile: null,
+      touchStartPos: null,
       toastMessage: '',
       toastType: '',
       isLoading: false,
@@ -238,10 +242,32 @@ export default {
       }
       this.resetTiles();
     },
+    // For touch events on mobile
+    onTouchStart(rIndex, cIndex, event) {
+      this.currTile = { rIndex, cIndex };
+      this.touchStartPos = event.touches[0];
+    },
+    onTouchMove(event) {
+      event.preventDefault(); // Prevent scrolling while dragging
+    },
+    onTouchEnd(rIndex, cIndex, event) {
+      const touchEndPos = event.changedTouches[0];
+      const targetElement = document.elementFromPoint(
+        touchEndPos.clientX,
+        touchEndPos.clientY
+      );
+
+      if (targetElement) {
+        const [targetRow, targetCol] = targetElement.id.split('-').map(Number);
+        if (!isNaN(targetRow) && !isNaN(targetCol)) {
+          this.swapTiles(this.currTile.rIndex, this.currTile.cIndex, targetRow, targetCol);
+        }
+      }
+      this.currTile = null;
+    },
     swapTiles() {
       const temp = this.board[this.currTile.r][this.currTile.c].src;
-      this.board[this.currTile.r][this.currTile.c].src =
-        this.board[this.otherTile.r][this.otherTile.c].src;
+      this.board[this.currTile.r][this.currTile.c].src = this.board[this.otherTile.r][this.otherTile.c].src;
       this.board[this.otherTile.r][this.otherTile.c].src = temp;
     },
     resetTiles() {
