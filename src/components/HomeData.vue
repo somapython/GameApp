@@ -168,14 +168,14 @@ export default {
           link: "/game/puzzle",
           colors: ["#ff9a8b", "#ff6a88"],
         },
-        {
-          name: "Candy Crush",
-          icon: "🍬",
-          description: "Match candies to clear levels!",
-          image: candyImage,
-          link: "/game/candy",
-          colors: ["#00c6ff", "#0072ff"],
-        },
+        // {
+        //   name: "Candy Crush",
+        //   icon: "🍬",
+        //   description: "Match candies to clear levels!",
+        //   image: candyImage,
+        //   link: "/game/candy",
+        //   colors: ["#00c6ff", "#0072ff"],
+        // },
         {
           name: "Doodle Jump",
           icon: "🎨",
