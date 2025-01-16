@@ -168,7 +168,7 @@
     </div>
   </div>
 
-    <div v-if="currentPuzzle.type === 'drag-drop'" class="puzzle-drag-drop">
+    <!-- <div v-if="currentPuzzle.type === 'drag-drop'" class="puzzle-drag-drop">
       <p class="text-xl font-bold mb-4">{{ currentPuzzle.question }}</p>
       <div class="drop-area flex gap-4">
         <div v-for="(piece, index) in shuffledPieces"
@@ -186,8 +186,26 @@
           </span>
         </div>
       </div>
+    </div> -->
+    <div v-if="currentPuzzle.type === 'drag-drop'" class="puzzle-drag-drop">
+        <p class="text-xl font-bold mb-4">{{ currentPuzzle.question }}</p>
+        <div class="drop-area flex gap-4">
+            <div v-for="(piece, index) in shuffledPieces" :key="index"  draggable="true"
+                @dragstart="onDragStart(index)" @touchstart="onTouchStart(index, $event)"
+                @touchmove="onTouchMove($event)"  @touchend="onTouchEnd" class="draggable bg-blue-200 p-2 rounded cursor-pointer" >
+                    {{ piece }}
+            </div>
+        </div>
+        <div class="drop-zone bg-gray-100 border-dashed border-2 border-gray-500 p-4 rounded mt-4"
+            @dragover.prevent  @drop="onDrop" @touchend="onDrop" >
+            <p v-if="!draggedItems.length" class="text-gray-500">Drop letters here</p>
+            <div v-else class="flex gap-2">
+                <span v-for="(item, idx) in draggedItems" :key="idx" class="bg-green-200 p-2 rounded" >
+                    {{ item }}
+                </span>
+            </div>
+        </div>
     </div>
-
 
         <div v-if="currentPuzzle.type === 'image-match'" class="puzzle-image-match">
           <p class="text-xl font-bold mb-4">{{ currentPuzzle.question }}</p>
@@ -370,6 +388,7 @@ export default {
       shuffledPieces: [], 
       draggedItems: [],
       draggedIndex: null,
+      touchStartPos: null,
       selectedAnswers: [], 
       options: [], 
       currentPuzzle: {}, 
@@ -392,12 +411,12 @@ export default {
        1: { type: 'memory', question: 'Match the pairs.', pairs: ['A', 'B', 'C', 'A', 'B', 'C'], answer: ['A', 'B', 'C'] },
       2: { type: 'word unscramble', question: 'Unscramble the word: "LUETBAIUF"', answer: 'BEAUTIFUL' },   
       3: { type: 'sequence memory', question: 'Memorize this sequence:', sequence: ['3', '7', '1', '9', '4'], timeToShow: 5000,answer:'37194' },    
-        4: { type: 'word-search', question: 'Find these words: [CAT, DOG, FISH]', grid: [
+        4: { type: 'word-search', question: 'Find these words: [BOLT, HAT, FISH]', grid: [
           'B', 'O', 'L', 'T',
           'H', 'A', 'T', 'Y',
           'F', 'I', 'S', 'H',
         ], answer: ['BOLT', 'HAT', 'FISH'] },
-        5: { type: 'logic', question: 'What has to be broken before you can use it?', answer: 'An egg' },
+        5: { type: 'logic', question: 'What has to be broken before you can use it?', answer: 'egg' },
          6: { type: 'drag-drop', question: 'Rearrange the letters to form the word.', pieces: ['L', 'P', 'A', 'E', 'P'], answer: 'APPLE'},
         7: { type: 'image-match', question: 'Match the animals to their names.',images: [
             { src: catImages, name: 'Cat' },
@@ -514,22 +533,22 @@ export default {
     checkAnswer(selectedOption) {
       console.log(selectedOption)
       const trimmedUserAnswer = this.userAnswer?.trim() || '';
-      const correctAnswer = this.currentPuzzle.type === 'vocabulary' || this.currentPuzzle.type === 'word unscramble'
-      ? this.currentPuzzle.answer : trimmedUserAnswer;
+      const isSpecialType  = this.currentPuzzle.type === 'vocabulary' || this.currentPuzzle.type === 'word unscramble';
 
-      if (!trimmedUserAnswer && this.currentPuzzle.type !== 'vocabulary' && this.currentPuzzle.type !== 'word unscramble') {
+      const correctAnswer = this.currentPuzzle.answer;
+      if (trimmedUserAnswer === "" && isSpecialType) {
         this.showToast('Answer cannot be empty. Please try again.', 'warning');
         return;
       }
-
-      if (correctAnswer.toLowerCase() === this.currentPuzzle.answer.toLowerCase()) {
+  
+      if (trimmedUserAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
             this.showToast('Correct answer!.', 'success');
             this.score += 10;
             this.saveProgress(this.level + 1);
             this.currentPuzzle.solved = true;
             this.level++;
-         this.currentPuzzle = this.puzzles[this.level]; 
-        this.$router.push({ name: 'LevelView', params: { levelNo: this.level } });
+            this.currentPuzzle = this.puzzles[this.level]; 
+            this.$router.push({ name: 'LevelView', params: { levelNo: this.level } });
       } else {
           this.showToast('The Given answer isIncorrect. Try again...', 'danger');
           const puzzleGameOverAudio = new Audio(puzzleAudioFail);
@@ -719,6 +738,30 @@ export default {
       }
     }
   },
+  onTouchStart(index, event) {
+      this.draggedIndex = index;
+      this.touchStartPos = event.touches[0];
+    },
+    onTouchMove(event) {
+      event.preventDefault(); // Prevent scrolling while dragging
+    },
+    onTouchEnd(event) {
+      const touchEndPos = event.changedTouches[0];
+      const dropZone = document.querySelector('.drop-zone');
+      const dropZoneRect = dropZone.getBoundingClientRect();
+
+      // Check if touch ended inside the drop zone
+      if (
+        touchEndPos.clientX >= dropZoneRect.left &&
+        touchEndPos.clientX <= dropZoneRect.right &&
+        touchEndPos.clientY >= dropZoneRect.top &&
+        touchEndPos.clientY <= dropZoneRect.bottom
+      ) {
+        this.onDrop();
+      } else {
+        this.draggedIndex = null; // Reset if not dropped in the zone
+      }
+    },
   resetDragDropPuzzle() {
     this.shuffledPieces = [...this.currentPuzzle.pieces];
     this.draggedItems = [];
