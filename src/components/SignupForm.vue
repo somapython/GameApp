@@ -65,8 +65,6 @@
 import LoaderData from './LoaderData.vue';
 import ToasterData from './ToasterData.vue';
 import axios from 'axios';
-// import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-// import { database } from "./firebase";
 export default {
   components: {
     LoaderData,
@@ -93,12 +91,6 @@ export default {
       setTimeout(() => {
         this.isLoading = false;
       }, 500);
-    //   const userData = JSON.parse(localStorage.getItem('user'));
-    //     if (userData && userData.tokenId) {
-    //         this.isLoggedIn = true;
-    //     } else {
-    //         this.isLoggedIn = false;
-    //     }
   },
   methods: {
     async signup() {
@@ -117,12 +109,6 @@ export default {
             this.showToast('Invalid PIN Format, Only numbers allowed', 'danger');
             return;
         }
-      // const fileRef = ref(storage, `profiles/${this.profilePicture.name}`);
-      // const snapshot =  await uploadBytes(fileRef, this.profilePicture);
-      // console.log("Uploaded a file!", snapshot);
-      // const downloadURL = await getDownloadURL(fileRef);
-      // console.log("File available at", downloadURL);
-      // this.profilePicture = downloadURL;
         this.isLoading = true;
       
         try{
