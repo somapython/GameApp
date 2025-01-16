@@ -123,7 +123,7 @@ import quizImage from '../assets/Home/quiz.png';
 import puzzleImage from '../assets/Home/puzzle.png';
 import ludoImage from '../assets/Home/ludo.png';
 import snakeImage from '../assets/Home/snake.png';
-import candyImage from '../assets/Home/candy.png';
+//import candyImage from '../assets/Home/candy.png';
 import doodleImage from '../assets/Home/doodle.png';
 import blackjackImage from '../assets/Home/blackjack.png';
 import breakoutImage from '../assets/Home/breakout.png';
